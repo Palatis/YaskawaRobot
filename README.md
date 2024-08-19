@@ -1,5 +1,5 @@
 # YaskawaRobot
-Yaskawa High Speed Ethernet Server Wrapper for .NET
+Yaskawa High Speed Ethernet Server for .NET
 
 
 ## Controller Support
