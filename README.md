@@ -12,7 +12,7 @@ Yaskawa High Speed Ethernet Server Wrapper for .NET
 * LabVIEW
 
 ## Methods
-Complete 43/47 Robot control commands. ![91](https://progress-bar.dev/91)<br />
+43/47 Robot control commands is completed.
 
 ## Usage
 ```C#
