@@ -42,7 +42,7 @@ namespace YRCC
         {
             alarm.Code = BitConverter.ToUInt32(packetData, 0);
             alarm.Data = BitConverter.ToUInt32(packetData, 4);
-            alarm.Type = BitConverter.ToUInt32(packetData, 8);
+            alarm.Type = (AlarmType)BitConverter.ToUInt32(packetData, 8);
             string timeString = Encoding.ASCII.GetString(packetData.Skip(12).Take(16).ToArray());
             if (DateTime.TryParseExact(timeString, DATE_PATTERN, null,
                 System.Globalization.DateTimeStyles.None, out DateTime dateTime))
@@ -81,7 +81,7 @@ namespace YRCC
         /// <summary>
         /// 異常分類
         /// </summary>
-        public uint Type = 0;
+        public AlarmType Type = 0;
 
         /// <summary>
         /// 
@@ -97,11 +97,45 @@ namespace YRCC
         }
     }
 
-    /*public enum AlarmType : uint
+    public enum AlarmType : uint
     {
-        //待補, 或改成Dictionary結構
+        /// <summary>No alarm</summary>
         NoAlarm = 0,
-
-        SLURBT = 3,
-    }*/
+        /// <summary>Decimal UNSIGNED SHORT type (ex: [1])</summary>
+        DecimalUShort = 1,
+        /// <summary>UNSIGNED CHAR bit pattern (ex: [0000_0001])</summary>
+        ByteBitPattern = 2,
+        /// <summary>User axis type (ex: [SLURBT])</summary>
+        UserAxis = 3,
+        /// <summary>Spacial coordinate type (ex: [XYZ])</summary>
+        SpacialCoordinate = 4,
+        /// <summary>Robot coordinate type (ex: {XYZRxRyRz])</summary>
+        RobotCoordinate = 5,
+        /// <summary>Conveyor characteristic file (ex: [123])</summary>
+        ConveyorCharacteristicFile = 6,
+        /// <summary>Control group type for robot & station (ex: [R1R2S1S2])</summary>
+        RobotStationControlGroup = 8,
+        /// <summary>Decimal SHORT type (ex: [-1])</summary>
+        DecimalShort = 9,
+        /// <summary>UNSIGNED SHORT bit pattern (ex: [0000_0000_0000_0001])</summary>
+        UShortBitPattern = 10,
+        /// <summary>Control group type for robot only (ex: [R1])</summary>
+        RobotControlGroup = 11,
+        /// <summary>Control gorup type for robot, station, and base (ex: [R1S1B1])</summary>
+        AllControlGroup = 12,
+        /// <summary>Control group LOW/HIGH logical axis (ex: [R1: LOW SLURBT, HIGH SLURBT])</summary>
+        ControlGroupLowHighLogicalAxis = 20,
+        /// <summary>Control group MIN/MAX logical axis (ex: [R1: MIN SLURBT, MAX SLURBT])</summary>
+        ControlGroupMinMaxLogicalAxis = 21,
+        /// <summary>Control gorup MIN/MAX spacial coordinate (ex: [R1: MIN XYZ, MAX XYZ])</summary>
+        ControlGroupMinMaxSpacialCoordinate = 22,
+        /// <summary>Logical axis of both control group 1 and control group 2 (ex: [R1: SLURBT, R2: SLURBT])</summary>
+        LogicalAxisEachCGroup = 23,
+        /// <summary>Logical axis 1 and 2 of the control group (ex: [R1: SLURBT, SLURBT])</summary>
+        LogicalAxisCGroups = 24,
+        /// <summary>Logical axis of the control group and UNSIGNED CHAR type (ex: [R1: SLURBT 1])</summary>
+        LogicalAxisCGroupByte = 25,
+        /// <summary>Control group and UNSIGNED CHAR type (ex: [R1: 1])</summary>
+        LogicalAxisByte = 26,
+    }
 }
