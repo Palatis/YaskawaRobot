@@ -37,7 +37,6 @@ namespace YRCC
         Socket socket = new Socket(SocketType.Dgram, ProtocolType.Udp);
         EndPoint endPoint;
 
-        private readonly object SocketLock = new object();
         #endregion
 
         #region -- Constant --
@@ -165,7 +164,7 @@ namespace YRCC
         {
             PacketAns ans = null;
             byte[] ans_packet = new byte[512];
-            lock (SocketLock)
+            lock (this)
             {
                 bool to_disc = !socket.Connected;
                 try
