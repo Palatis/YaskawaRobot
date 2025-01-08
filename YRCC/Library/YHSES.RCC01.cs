@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Linq;
+using System.Text;
 using YRCC.Packet;
 
 namespace YRCC
@@ -42,13 +43,13 @@ namespace YRCC
             alarm.Code = BitConverter.ToUInt32(packetData, 0);
             alarm.Data = BitConverter.ToUInt32(packetData, 4);
             alarm.Type = BitConverter.ToUInt32(packetData, 8);
-            string timeString = ascii.GetString(packetData.Skip(12).Take(16).ToArray());
+            string timeString = Encoding.ASCII.GetString(packetData.Skip(12).Take(16).ToArray());
             if (DateTime.TryParseExact(timeString, DATE_PATTERN, null,
                 System.Globalization.DateTimeStyles.None, out DateTime dateTime))
             {
                 alarm.Time = dateTime;
             }
-            alarm.Name = big5.GetString(packetData.Skip(28).Take(32).ToArray()).TrimEnd('\0');
+            alarm.Name = MessageEncoding.GetString(packetData.Skip(28).Take(32).ToArray()).TrimEnd('\0');
         }
     }
 

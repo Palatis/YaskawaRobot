@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Linq;
+using System.Text;
 using YRCC.Packet;
 
 namespace YRCC
@@ -26,14 +27,14 @@ namespace YRCC
                 err_code = ans.added_status;
                 if (ans.status == ERROR_SUCCESS)
                 {
-                    config.Axis_1 = utf_8.GetString(ans.data.Skip(0).Take(4).ToArray());
-                    config.Axis_2 = utf_8.GetString(ans.data.Skip(4).Take(4).ToArray());
-                    config.Axis_3 = utf_8.GetString(ans.data.Skip(8).Take(4).ToArray());
-                    config.Axis_4 = utf_8.GetString(ans.data.Skip(12).Take(4).ToArray());
-                    config.Axis_5 = utf_8.GetString(ans.data.Skip(16).Take(4).ToArray());
-                    config.Axis_6 = utf_8.GetString(ans.data.Skip(20).Take(4).ToArray());
-                    config.Axis_7 = utf_8.GetString(ans.data.Skip(24).Take(4).ToArray());
-                    config.Axis_7 = utf_8.GetString(ans.data.Skip(28).Take(4).ToArray());
+                    config.Axis_1 = Encoding.UTF8.GetString(ans.data.Skip(0).Take(4).ToArray());
+                    config.Axis_2 = Encoding.UTF8.GetString(ans.data.Skip(4).Take(4).ToArray());
+                    config.Axis_3 = Encoding.UTF8.GetString(ans.data.Skip(8).Take(4).ToArray());
+                    config.Axis_4 = Encoding.UTF8.GetString(ans.data.Skip(12).Take(4).ToArray());
+                    config.Axis_5 = Encoding.UTF8.GetString(ans.data.Skip(16).Take(4).ToArray());
+                    config.Axis_6 = Encoding.UTF8.GetString(ans.data.Skip(20).Take(4).ToArray());
+                    config.Axis_7 = Encoding.UTF8.GetString(ans.data.Skip(24).Take(4).ToArray());
+                    config.Axis_7 = Encoding.UTF8.GetString(ans.data.Skip(28).Take(4).ToArray());
                 }
                 return ans.status;
             }

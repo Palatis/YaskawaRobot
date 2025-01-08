@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Linq;
+using System.Text;
 using YRCC.Packet;
 
 namespace YRCC
@@ -19,7 +20,7 @@ namespace YRCC
         {
             try
             {
-                var bytes = utf_8.GetBytes(job_name);
+                var bytes = Encoding.UTF8.GetBytes(job_name);
                 if (bytes.Length <= 32)
                 {
                     bytes = bytes.Concat(new byte[32 - bytes.Length]).ToArray();

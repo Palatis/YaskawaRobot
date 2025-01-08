@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Linq;
+using System.Text;
 using YRCC.Packet;
 
 namespace YRCC
@@ -26,9 +27,9 @@ namespace YRCC
                 err_code = ans.added_status;
                 if (ans.status == ERROR_SUCCESS)
                 {
-                    info.SysSoftwareVer = ascii.GetString(ans.data.Skip(0).Take(24).ToArray());
-                    info.ModelName_App = ascii.GetString(ans.data.Skip(24).Take(16).ToArray());
-                    info.ParameterVer = ascii.GetString(ans.data.Skip(40).Take(8).ToArray());
+                    info.SysSoftwareVer = Encoding.ASCII.GetString(ans.data.Skip(0).Take(24).ToArray());
+                    info.ModelName_App = Encoding.ASCII.GetString(ans.data.Skip(24).Take(16).ToArray());
+                    info.ParameterVer = Encoding.ASCII.GetString(ans.data.Skip(40).Take(8).ToArray());
                 }
                 return ans.status;
             }

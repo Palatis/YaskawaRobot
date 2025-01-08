@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Linq;
+using System.Text;
 using YRCC.Packet;
 
 namespace YRCC
@@ -26,11 +27,11 @@ namespace YRCC
                 err_code = ans.added_status;
                 if (ans.status == ERROR_SUCCESS)
                 {
-                    string dateString = ascii.GetString(ans.data.Skip(0).Take(16).ToArray());
+                    string dateString = Encoding.ASCII.GetString(ans.data.Skip(0).Take(16).ToArray());
                     time.DateStart = DateTime.ParseExact(dateString, DATE_PATTERN, null);
 
                     //PATTERN：%h:mm'ss
-                    string timeString = ascii.GetString(ans.data.Skip(16).Take(12).ToArray()).TrimEnd('\0');
+                    string timeString = Encoding.ASCII.GetString(ans.data.Skip(16).Take(12).ToArray()).TrimEnd('\0');
                     string[] temp0 = timeString.Split(':'); 
                     string[] temp1 = temp0.Last().Split('\'');
                     int hh = int.Parse(temp0.First());

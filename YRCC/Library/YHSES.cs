@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -38,9 +38,6 @@ namespace YRCC
         EndPoint endPoint;
 
         private readonly object SocketLock = new object();
-        readonly Encoding ascii = Encoding.ASCII;
-        readonly Encoding utf_8 = Encoding.UTF8;
-        readonly Encoding big5 = Encoding.GetEncoding("big5");
         #endregion
 
         #region -- Constant --
@@ -80,6 +77,8 @@ namespace YRCC
         /// </summary>
         public int PORT_FILE_CONTROL { get; set; } = 10041;
 
+        public Encoding MessageEncoding { get; }
+
         /// <summary>
         /// 連線是否正常? (測試中)
         /// </summary>
@@ -92,12 +91,13 @@ namespace YRCC
         /// </summary>
         /// <param name="ip">IP位址 ex."192.168.255.1"</param>
         /// <param name="timeout">連線逾時</param>
-        public YHSES(string ip, int timeout = 800)
+        public YHSES(string ip, Encoding encoding = default, int timeout = 800)
         {
             try
             {
                 IP = ip;
                 TimeOut = timeout;
+                MessageEncoding = encoding ?? Encoding.Default;
                 socket.ReceiveTimeout = TimeOut;
                 socket.SendTimeout = TimeOut;
             }
