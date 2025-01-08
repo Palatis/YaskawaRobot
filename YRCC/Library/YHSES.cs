@@ -47,6 +47,7 @@ namespace YRCC
 
         const int ERROR_SUCCESS = 0;
         const int ERROR_CONNECTION = 1;
+        const int ERROR_REQUEST_ID = 2;
 
         /// <summary>
         /// Ex:2011/10/10 15:49
@@ -165,18 +166,20 @@ namespace YRCC
                         if (direction == TRANSMISSION_SEND_AND_RECV)
                         {
                             int count = socket.Receive(ans_packet);
+                            ans = new PacketAns(ans_packet);
                             IsConnectOK = true;
                         }
                     }
                     catch (SocketException ex)
                     {
                         IsConnectOK = false;
-                        ans_packet = GenerateErrorAnsPacket(ERROR_CONNECTION, (ushort)ex.ErrorCode);
+                        ans = new PacketAns(GenerateErrorAnsPacket(ERROR_CONNECTION, (ushort)ex.ErrorCode));
                     }
 
-                    if (direction == TRANSMISSION_SEND_AND_RECV)
+                    if (ans.status != ERROR_CONNECTION)
                     {
-                        ans = new PacketAns(ans_packet);
+                        if (req.Header.req_id != ans.Header.req_id)
+                            ans = new PacketAns(GenerateErrorAnsPacket(ERROR_REQUEST_ID, 0));
                     }
 
                     if (to_disc)

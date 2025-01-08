@@ -5,7 +5,7 @@ namespace YRCC.Packet
 {
     class PacketReq
     {
-        readonly PacketHeader header;
+        public readonly PacketHeader Header;
         readonly ushort cmd_no;
         readonly ushort inst;
         readonly byte attr;
@@ -14,7 +14,7 @@ namespace YRCC.Packet
 
         public PacketReq(byte division, byte req_id, ushort cmd_no, ushort inst, byte attr, byte service, byte[] data, ushort data_size)
         {
-            header = new PacketHeader(data_size, division,
+            Header = new PacketHeader(data_size, division,
                 PacketHeader.HEADER_ACK_REQUEST, req_id, PacketHeader.HEADER_BLOCK_NUMBER_REQ);
             this.cmd_no = cmd_no;
             this.inst = inst;
@@ -25,7 +25,7 @@ namespace YRCC.Packet
 
         public byte[] ToBytes()
         {
-            return header.ToBytes()
+            return Header.ToBytes()
                 .Concat(BitConverter.GetBytes(cmd_no))
                 .Concat(BitConverter.GetBytes(inst))
                 .Concat(new byte[] { attr, service })
@@ -38,11 +38,11 @@ namespace YRCC.Packet
         {
             if (data == null)
             {
-                return new PacketReq(header.division, header.req_id, cmd_no, inst, attr, service, this.data, (ushort)this.data.Length);
+                return new PacketReq(Header.division, Header.req_id, cmd_no, inst, attr, service, this.data, (ushort)this.data.Length);
             }
             else
             {
-                return new PacketReq(header.division, header.req_id, cmd_no, inst, attr, service, data, (ushort)data.Length);
+                return new PacketReq(Header.division, Header.req_id, cmd_no, inst, attr, service, data, (ushort)data.Length);
             }
         }
     }

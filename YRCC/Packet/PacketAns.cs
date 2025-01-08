@@ -5,7 +5,7 @@ namespace YRCC.Packet
 {
     class PacketAns
     {
-        readonly PacketHeader header;
+        public readonly PacketHeader Header;
         public readonly byte service;
         public readonly byte status;
         public readonly byte added_status_size;
@@ -14,12 +14,12 @@ namespace YRCC.Packet
 
         public PacketAns(byte[] _packet)
         {
-            header = new PacketHeader(_packet);
+            Header = new PacketHeader(_packet);
             service = _packet[24];
             status = _packet[25];
             added_status_size = _packet[26];
             added_status = BitConverter.ToUInt16(_packet, 28);
-            data = _packet.Skip(PacketHeader.HEADER_SIZE).Take(header.data_size).ToArray();
+            data = _packet.Skip(PacketHeader.HEADER_SIZE).Take(Header.data_size).ToArray();
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace YRCC.Packet
         /// <returns></returns>
         public byte[] ToBytes()
         {
-            return header.ToBytes()
+            return Header.ToBytes()
                 .Concat(new byte[] { service, status, added_status_size, PacketHeader.HEADER_PADDING_U8, })
                 .Concat(BitConverter.GetBytes(added_status))
                 .Concat(BitConverter.GetBytes(PacketHeader.HEADER_PADDING_U16))
