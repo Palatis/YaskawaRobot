@@ -20,7 +20,7 @@ namespace YRCC
             var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, NextRequestId(),
                 0x7F, number, 0, 0x01,
                 new byte[0], 0);
-            var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);
+            var ans = Transmit(req, PORT_ROBOT_CONTROL);
             err_code = ans.added_status;
             if (ans.status == ERROR_SUCCESS)
             {
@@ -54,7 +54,7 @@ namespace YRCC
             var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, NextRequestId(),
                 0x7F, number, 0, 0x02,
                 bytes, (ushort)bytes.Length);
-            var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);
+            var ans = Transmit(req, PORT_ROBOT_CONTROL);
             err_code = ans.added_status;
             return ans.status;
         }

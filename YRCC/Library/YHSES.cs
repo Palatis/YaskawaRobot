@@ -144,8 +144,9 @@ namespace YRCC
                 .ToArray();
         }
 
-        private PacketAns Transmit(byte[] packet, int port, int direction = TRANSMISSION_SEND_AND_RECV)
+        private PacketAns Transmit(PacketReq req, int port, int direction = TRANSMISSION_SEND_AND_RECV)
         {
+            byte[] req_packet = req.ToBytes();
             byte[] ans_packet = ArrayPool<byte>.Shared.Rent(512);
             try
             {
@@ -160,7 +161,7 @@ namespace YRCC
 
                     try
                     {
-                        socket.Send(packet);
+                        socket.Send(req_packet);
                         if (direction == TRANSMISSION_SEND_AND_RECV)
                         {
                             int count = socket.Receive(ans_packet);
