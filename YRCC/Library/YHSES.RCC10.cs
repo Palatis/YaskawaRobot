@@ -6,7 +6,7 @@ namespace YRCC
     partial class YHSES
     {
         /// 本頁功能確認於 2022/10/26 by Willy
-        
+
         /// <summary>
         /// [RCC10] 讀取暫存器資料 (0x79)
         /// </summary>

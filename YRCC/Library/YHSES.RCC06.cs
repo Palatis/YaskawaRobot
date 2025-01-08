@@ -181,7 +181,7 @@ namespace YRCC
         /// <returns></returns>
         public override string ToString()
         {
-            return 
+            return
                 $"1: {Axis_1}, " +
                 $"2: {Axis_2}, " +
                 $"3: {Axis_3}, " +

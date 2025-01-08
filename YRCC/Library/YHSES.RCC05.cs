@@ -75,7 +75,7 @@ namespace YRCC
         /// 
         /// </summary>
         public string Axis_5;
-        
+
         /// <summary>
         /// 
         /// </summary>
