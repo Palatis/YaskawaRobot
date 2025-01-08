@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Text;
 using YRCC.Packet;
@@ -18,26 +17,18 @@ namespace YRCC
         /// <returns></returns>
         public int ReadSystemInfoData(ushort number, ref SystemInfo info, out ushort err_code)
         {
-            try
+            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
+                0x89, number, 0, 0x01,
+                new byte[0], 0);
+            var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);
+            err_code = ans.added_status;
+            if (ans.status == ERROR_SUCCESS)
             {
-                var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
-                    0x89, number, 0, 0x01,
-                    new byte[0], 0);
-                var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);
-                err_code = ans.added_status;
-                if (ans.status == ERROR_SUCCESS)
-                {
-                    info.SysSoftwareVer = Encoding.ASCII.GetString(ans.data.Skip(0).Take(24).ToArray());
-                    info.ModelName_App = Encoding.ASCII.GetString(ans.data.Skip(24).Take(16).ToArray());
-                    info.ParameterVer = Encoding.ASCII.GetString(ans.data.Skip(40).Take(8).ToArray());
-                }
-                return ans.status;
+                info.SysSoftwareVer = Encoding.ASCII.GetString(ans.data.Skip(0).Take(24).ToArray());
+                info.ModelName_App = Encoding.ASCII.GetString(ans.data.Skip(24).Take(16).ToArray());
+                info.ParameterVer = Encoding.ASCII.GetString(ans.data.Skip(40).Take(8).ToArray());
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            return ans.status;
         }
     }
 

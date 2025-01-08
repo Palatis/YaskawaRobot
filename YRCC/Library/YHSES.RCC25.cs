@@ -18,34 +18,26 @@ namespace YRCC
         /// <returns></returns>
         public int ReadTimeData(ushort number, ref Time time, out ushort err_code)
         {
-            try
+            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
+                0x88, number, 0, 0x01,
+                new byte[0], 0);
+            var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);
+            err_code = ans.added_status;
+            if (ans.status == ERROR_SUCCESS)
             {
-                var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
-                    0x88, number, 0, 0x01,
-                    new byte[0], 0);
-                var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);
-                err_code = ans.added_status;
-                if (ans.status == ERROR_SUCCESS)
-                {
-                    string dateString = Encoding.ASCII.GetString(ans.data.Skip(0).Take(16).ToArray());
-                    time.DateStart = DateTime.ParseExact(dateString, DATE_PATTERN, null);
+                string dateString = Encoding.ASCII.GetString(ans.data.Skip(0).Take(16).ToArray());
+                time.DateStart = DateTime.ParseExact(dateString, DATE_PATTERN, null);
 
-                    //PATTERN：%h:mm'ss
-                    string timeString = Encoding.ASCII.GetString(ans.data.Skip(16).Take(12).ToArray()).TrimEnd('\0');
-                    string[] temp0 = timeString.Split(':'); 
-                    string[] temp1 = temp0.Last().Split('\'');
-                    int hh = int.Parse(temp0.First());
-                    int mm = int.Parse(temp1.First());
-                    int ss = int.Parse(temp1.Last());
-                    time.TimeElapsed = new TimeSpan(hh, mm, ss);
-                }
-                return ans.status;
+                //PATTERN：%h:mm'ss
+                string timeString = Encoding.ASCII.GetString(ans.data.Skip(16).Take(12).ToArray()).TrimEnd('\0');
+                string[] temp0 = timeString.Split(':');
+                string[] temp1 = temp0.Last().Split('\'');
+                int hh = int.Parse(temp0.First());
+                int mm = int.Parse(temp1.First());
+                int ss = int.Parse(temp1.Last());
+                time.TimeElapsed = new TimeSpan(hh, mm, ss);
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            return ans.status;
         }
     }
 

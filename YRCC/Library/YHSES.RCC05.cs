@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Text;
 using YRCC.Packet;
@@ -18,31 +17,23 @@ namespace YRCC
         /// <returns></returns>
         public int ReadAxisName(ushort robot_number, ref AxisName config, out ushort err_code)
         {
-            try
+            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
+                0x74, robot_number, 0, 0x01,
+                new byte[0], 0);
+            var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);
+            err_code = ans.added_status;
+            if (ans.status == ERROR_SUCCESS)
             {
-                var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
-                    0x74, robot_number, 0, 0x01,
-                    new byte[0], 0);
-                var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);
-                err_code = ans.added_status;
-                if (ans.status == ERROR_SUCCESS)
-                {
-                    config.Axis_1 = Encoding.UTF8.GetString(ans.data.Skip(0).Take(4).ToArray());
-                    config.Axis_2 = Encoding.UTF8.GetString(ans.data.Skip(4).Take(4).ToArray());
-                    config.Axis_3 = Encoding.UTF8.GetString(ans.data.Skip(8).Take(4).ToArray());
-                    config.Axis_4 = Encoding.UTF8.GetString(ans.data.Skip(12).Take(4).ToArray());
-                    config.Axis_5 = Encoding.UTF8.GetString(ans.data.Skip(16).Take(4).ToArray());
-                    config.Axis_6 = Encoding.UTF8.GetString(ans.data.Skip(20).Take(4).ToArray());
-                    config.Axis_7 = Encoding.UTF8.GetString(ans.data.Skip(24).Take(4).ToArray());
-                    config.Axis_7 = Encoding.UTF8.GetString(ans.data.Skip(28).Take(4).ToArray());
-                }
-                return ans.status;
+                config.Axis_1 = Encoding.UTF8.GetString(ans.data.Skip(0).Take(4).ToArray());
+                config.Axis_2 = Encoding.UTF8.GetString(ans.data.Skip(4).Take(4).ToArray());
+                config.Axis_3 = Encoding.UTF8.GetString(ans.data.Skip(8).Take(4).ToArray());
+                config.Axis_4 = Encoding.UTF8.GetString(ans.data.Skip(12).Take(4).ToArray());
+                config.Axis_5 = Encoding.UTF8.GetString(ans.data.Skip(16).Take(4).ToArray());
+                config.Axis_6 = Encoding.UTF8.GetString(ans.data.Skip(20).Take(4).ToArray());
+                config.Axis_7 = Encoding.UTF8.GetString(ans.data.Skip(24).Take(4).ToArray());
+                config.Axis_7 = Encoding.UTF8.GetString(ans.data.Skip(28).Take(4).ToArray());
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            return ans.status;
         }
     }
 

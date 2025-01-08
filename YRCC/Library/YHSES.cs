@@ -96,58 +96,37 @@ namespace YRCC
         /// <param name="timeout">連線逾時</param>
         public YHSES(string remote, Encoding encoding = default, int timeout = 800, int r_port = DEFAULT_ROBOT_CONTROL_PORT, int f_port = DEFAULT_FILE_CONTROL_PORT)
         {
-            try
-            {
-                Remote = remote;
-                TimeOut = timeout;
-                MessageEncoding = encoding ?? Encoding.Default;
-                socket.ReceiveTimeout = TimeOut;
-                socket.SendTimeout = TimeOut;
-                PORT_ROBOT_CONTROL = r_port;
-                PORT_FILE_CONTROL = f_port;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            Remote = remote;
+            TimeOut = timeout;
+            MessageEncoding = encoding ?? Encoding.Default;
+            socket.ReceiveTimeout = TimeOut;
+            socket.SendTimeout = TimeOut;
+            PORT_ROBOT_CONTROL = r_port;
+            PORT_FILE_CONTROL = f_port;
         }
 
         private void Connect(int port)
         {
-            try
+            if (!socket.Connected)
             {
-                if (!socket.Connected)
+                socket.Dispose();
+                socket = new Socket(SocketType.Dgram, ProtocolType.Udp)
                 {
-                    socket.Dispose();
-                    socket = new Socket(SocketType.Dgram, ProtocolType.Udp)
-                    {
-                        ReceiveTimeout = TimeOut,
-                        SendTimeout = TimeOut
-                    };
-                }
-                endPoint = new IPEndPoint(IPUtil.ToIPAddress(Remote), port);
-                socket.Connect(endPoint);
+                    ReceiveTimeout = TimeOut,
+                    SendTimeout = TimeOut
+                };
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            endPoint = new IPEndPoint(IPUtil.ToIPAddress(Remote), port);
+            socket.Connect(endPoint);
         }
 
         private void Disconnect()
         {
-            try
+            if (socket != null)
             {
-                if (socket != null)
-                {
-                    if (socket.Connected)
-                        socket.Close();
-                    socket.Dispose();
-                }
-            }
-            catch (Exception)
-            {
-                throw;
+                if (socket.Connected)
+                    socket.Close();
+                socket.Dispose();
             }
         }
 
@@ -171,17 +150,9 @@ namespace YRCC
                 lock (this)
                 {
                     bool to_disc = !socket.Connected;
-                    try
+                    if (!socket.Connected)
                     {
-                        if (!socket.Connected)
-                        {
-                            Connect(port);
-                        }
-                    }
-                    catch (Exception)
-                    {
-
-                        throw;
+                        Connect(port);
                     }
 
                     try

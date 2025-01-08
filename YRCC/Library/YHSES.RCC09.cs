@@ -1,5 +1,4 @@
-﻿using System;
-using YRCC.Packet;
+﻿using YRCC.Packet;
 
 namespace YRCC
 {
@@ -16,24 +15,16 @@ namespace YRCC
         /// <returns></returns>
         public int ReadIOData(ushort number, ref byte data, out ushort err_code)
         {
-            try
+            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
+                0x78, number, 1, 0x0E,
+                new byte[0], 0);
+            var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);
+            err_code = ans.added_status;
+            if (ans.status == ERROR_SUCCESS)
             {
-                var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
-                    0x78, number, 1, 0x0E,
-                    new byte[0], 0);
-                var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);
-                err_code = ans.added_status;
-                if (ans.status == ERROR_SUCCESS)
-                {
-                    data = ans.data[0];
-                }
-                return ans.status;
+                data = ans.data[0];
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            return ans.status;
         }
 
         /// <summary>
@@ -45,20 +36,12 @@ namespace YRCC
         /// <returns></returns>
         public int WriteIOData(ushort number, byte data, out ushort err_code)
         {
-            try
-            {
-                var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
-                    0x78, number, 1, 0x10,
-                    new byte[1] { data }, 1);
-                var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);
-                err_code = ans.added_status;
-                return ans.status;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
+                0x78, number, 1, 0x10,
+                new byte[1] { data }, 1);
+            var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);
+            err_code = ans.added_status;
+            return ans.status;
         }
     }
 }
