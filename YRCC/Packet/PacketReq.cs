@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,13 +27,13 @@ namespace YRCC.Packet
 
         public byte[] ToBytes()
         {
-            IEnumerable<byte> h = header.ToBytes()
+            return header.ToBytes()
                 .Concat(BitConverter.GetBytes(cmd_no))
                 .Concat(BitConverter.GetBytes(inst))
                 .Concat(new byte[] { attr, service })
                 .Concat(BitConverter.GetBytes(PacketHeader.HEADER_PADDING_U16))
-                .Concat(data);
-            return h.ToArray();
+                .Concat(data)
+                .ToArray();
         }
 
         public PacketReq Clone(byte[] data = null)
