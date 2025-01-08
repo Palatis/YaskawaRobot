@@ -53,6 +53,9 @@ namespace YRCC
         /// </summary>
         const string DATE_PATTERN = @"yyyy/MM/dd HH\:mm";
 
+        public const int DEFAULT_ROBOT_CONTROL_PORT = 10040;
+        public const int DEFAULT_FILE_CONTROL_PORT = 10041;
+
         #endregion
 
         #region -- Property --
@@ -70,12 +73,12 @@ namespace YRCC
         /// <summary>
         /// 手臂控制埠，預設10040
         /// </summary>
-        public int PORT_ROBOT_CONTROL { get; set; } = 10040;
+        public int PORT_ROBOT_CONTROL { get; }
 
         /// <summary>
         /// 檔案傳輸埠，預設10041
         /// </summary>
-        public int PORT_FILE_CONTROL { get; set; } = 10041;
+        public int PORT_FILE_CONTROL { get; }
 
         public Encoding MessageEncoding { get; }
 
@@ -91,7 +94,7 @@ namespace YRCC
         /// </summary>
         /// <param name="ip">IP位址 ex."192.168.255.1"</param>
         /// <param name="timeout">連線逾時</param>
-        public YHSES(string ip, Encoding encoding = default, int timeout = 800)
+        public YHSES(string ip, Encoding encoding = default, int timeout = 800, int r_port = DEFAULT_ROBOT_CONTROL_PORT, int f_port = DEFAULT_FILE_CONTROL_PORT)
         {
             try
             {
@@ -100,6 +103,8 @@ namespace YRCC
                 MessageEncoding = encoding ?? Encoding.Default;
                 socket.ReceiveTimeout = TimeOut;
                 socket.SendTimeout = TimeOut;
+                PORT_ROBOT_CONTROL = r_port;
+                PORT_FILE_CONTROL = f_port;
             }
             catch (Exception)
             {
