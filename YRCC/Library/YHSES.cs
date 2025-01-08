@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -139,7 +140,8 @@ namespace YRCC
             {
                 if (socket != null)
                 {
-                    socket.Close();
+                    if (socket.Connected)
+                        socket.Close();
                     socket.Dispose();
                 }
             }
@@ -162,50 +164,57 @@ namespace YRCC
 
         private PacketAns Transmit(byte[] packet, int port, int direction = TRANSMISSION_SEND_AND_RECV)
         {
-            PacketAns ans = null;
-            byte[] ans_packet = new byte[512];
-            lock (this)
+            byte[] ans_packet = ArrayPool<byte>.Shared.Rent(512);
+            try
             {
-                bool to_disc = !socket.Connected;
-                try
+                PacketAns ans = null;
+                lock (this)
                 {
-                    if (!socket.Connected)
+                    bool to_disc = !socket.Connected;
+                    try
                     {
-                        Connect(port);
+                        if (!socket.Connected)
+                        {
+                            Connect(port);
+                        }
                     }
-                }
-                catch (Exception)
-                {
+                    catch (Exception)
+                    {
 
-                    throw;
-                }
+                        throw;
+                    }
 
-                try
-                {
-                    socket.Send(packet);
+                    try
+                    {
+                        socket.Send(packet);
+                        if (direction == TRANSMISSION_SEND_AND_RECV)
+                        {
+                            int count = socket.Receive(ans_packet);
+                            IsConnectOK = true;
+                        }
+                    }
+                    catch (SocketException ex)
+                    {
+                        IsConnectOK = false;
+                        ans_packet = GenerateErrorAnsPacket(ERROR_CONNECTION, (ushort)ex.ErrorCode);
+                    }
+
                     if (direction == TRANSMISSION_SEND_AND_RECV)
                     {
-                        int count = socket.Receive(ans_packet);
-                        IsConnectOK = true;
+                        ans = new PacketAns(ans_packet);
+                    }
+
+                    if (to_disc)
+                    {
+                        Disconnect();
                     }
                 }
-                catch (SocketException ex)
-                {
-                    IsConnectOK = false;
-                    ans_packet = GenerateErrorAnsPacket(ERROR_CONNECTION, (ushort)ex.ErrorCode);
-                }
-
-                if (direction == TRANSMISSION_SEND_AND_RECV)
-                {
-                    ans = new PacketAns(ans_packet);
-                }
-
-                if (to_disc)
-                {
-                    Disconnect();
-                }
+                return ans;
             }
-            return ans;
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(ans_packet);
+            }
         }
     }
 }
