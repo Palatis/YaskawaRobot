@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +18,9 @@ namespace YRCC.Packet
         public const string HEADER_RESERVED_2 = "99999999";
         public const ushort HEADER_PADDING_U16 = 0;
         public const byte HEADER_PADDING_U8 = 0;
+
+        internal static readonly IReadOnlyList<byte> HEADER_IDENTIFIER_BYTES = Encoding.ASCII.GetBytes(HEADER_IDENTIFIER);
+        internal static readonly IReadOnlyList<byte> HEADER_RESERVED_2_BYTES = Encoding.ASCII.GetBytes(HEADER_RESERVED_2);
 
         public readonly ushort data_size;
         public readonly byte division;
@@ -45,12 +48,12 @@ namespace YRCC.Packet
 
         public byte[] ToBytes()
         {
-            return Encoding.ASCII.GetBytes(HEADER_IDENTIFIER)
+            return HEADER_IDENTIFIER_BYTES
                 .Concat(BitConverter.GetBytes(HEADER_SIZE))
                 .Concat(BitConverter.GetBytes(data_size))
                 .Concat(new byte[] { HEADER_RESERVED_1, division, ack, req_id })
                 .Concat(BitConverter.GetBytes(block_no))
-                .Concat(Encoding.ASCII.GetBytes(HEADER_RESERVED_2))
+                .Concat(HEADER_RESERVED_2_BYTES)
                 .ToArray();
         }
     }
