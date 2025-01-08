@@ -15,7 +15,7 @@ namespace YRCC
         /// <returns></returns>
         public int ReadByteData(ushort number, ref byte data, out ushort err_code)
         {
-            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
+            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, NextRequestId(),
                 0x7A, number, 1, 0x0E,
                 new byte[0], 0);
             var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);
@@ -36,7 +36,7 @@ namespace YRCC
         /// <returns></returns>
         public int WriteByteData(ushort number, byte data, out ushort err_code)
         {
-            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
+            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, NextRequestId(),
                 0x7A, number, 1, 0x10,
                 new byte[1] { data }, 1);
             var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);

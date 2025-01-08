@@ -87,6 +87,9 @@ namespace YRCC
         /// </summary>
         public bool IsConnectOK { get; private set; } = false;
 
+        private byte requestId = 0;
+        public byte RequestId => requestId;
+
         #endregion
 
         /// <summary>
@@ -187,5 +190,7 @@ namespace YRCC
                 ArrayPool<byte>.Shared.Return(ans_packet);
             }
         }
+
+        private byte NextRequestId() => ++requestId;
     }
 }

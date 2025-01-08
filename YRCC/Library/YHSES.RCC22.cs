@@ -15,7 +15,7 @@ namespace YRCC
         public int DisplayMessage(string message, out ushort err_code)
         {
             var bytes = MessageEncoding.GetBytes(message);
-            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
+            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, NextRequestId(),
                 0x85, 1, 0x01, 0x10,
                 bytes, (ushort)bytes.Length);
             var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);

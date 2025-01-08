@@ -8,7 +8,7 @@ namespace YRCC
         /*
         public int ReadBasePosData(ushort number, ref BasePosistion config, out ushort err_code)
         {
-            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
+            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, NextRequestId(),
                 0x80, number, 0, 0x01,
                 new byte[0], 0);
             var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);
@@ -31,7 +31,7 @@ namespace YRCC
         public int WriteBasePosData(ushort number, BasePosistion config, out ushort err_code)
         {
             var bytes = ParsePositionDataBytes(config);
-            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
+            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, NextRequestId(),
                 0x80, number, 0, 0x02,
                 bytes, (ushort)bytes.Length);
             var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);

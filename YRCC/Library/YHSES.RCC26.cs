@@ -17,7 +17,7 @@ namespace YRCC
         /// <returns></returns>
         public int ReadSystemInfoData(ushort number, ref SystemInfo info, out ushort err_code)
         {
-            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
+            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, NextRequestId(),
                 0x89, number, 0, 0x01,
                 new byte[0], 0);
             var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);

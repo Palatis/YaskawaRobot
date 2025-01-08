@@ -15,7 +15,7 @@ namespace YRCC
         /// <returns></returns>
         public int SwitchCycleType(CYCLE_TYPE type, out ushort err_code)
         {
-            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
+            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, NextRequestId(),
                 0x84, 2, 0x01, 0x10,
                 BitConverter.GetBytes((uint)type), 4);
             var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);

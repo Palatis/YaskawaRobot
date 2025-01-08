@@ -18,7 +18,7 @@ namespace YRCC
         /// <returns></returns>
         public int ReadTimeData(ushort number, ref Time time, out ushort err_code)
         {
-            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
+            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, NextRequestId(),
                 0x88, number, 0, 0x01,
                 new byte[0], 0);
             var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);

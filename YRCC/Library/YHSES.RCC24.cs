@@ -24,7 +24,7 @@ namespace YRCC
                 bytes = bytes.Concat(new byte[32 - bytes.Length]).ToArray();
             }
             bytes = bytes.Concat(BitConverter.GetBytes(line)).ToArray();
-            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, 0,
+            var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, NextRequestId(),
                 0x87, 1, 0x00, 0x02,
                 bytes, (ushort)bytes.Length);
             var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);
