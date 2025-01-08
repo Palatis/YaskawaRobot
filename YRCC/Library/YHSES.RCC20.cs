@@ -54,13 +54,13 @@ namespace YRCC
             err_code = ans.added_status;
             return ans.status;
         }
+    }
 
-        enum POWER_TYPE : int
-        {
-            HOLD = 1,
-            SERVO = 2,
-            HLOCK = 3,
-        }
+    public enum POWER_TYPE : int
+    {
+        HOLD = 1,
+        SERVO = 2,
+        HLOCK = 3,
     }
 
     /// <summary>
