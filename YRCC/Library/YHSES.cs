@@ -62,12 +62,12 @@ namespace YRCC
         /// <summary>
         /// Robot IP
         /// </summary>
-        public string IP { get; private set; }
+        public string Remote { get; }
 
         /// <summary>
         /// 逾時設定(ms)
         /// </summary>
-        public int TimeOut { get; private set; }
+        public int TimeOut { get; }
 
         /// <summary>
         /// 手臂控制埠，預設10040
@@ -91,13 +91,13 @@ namespace YRCC
         /// <summary>
         /// YASKAWA High Speed Ethernet Server
         /// </summary>
-        /// <param name="ip">IP位址 ex."192.168.255.1"</param>
+        /// <param name="remote">IP位址 ex."192.168.255.1"</param>
         /// <param name="timeout">連線逾時</param>
-        public YHSES(string ip, Encoding encoding = default, int timeout = 800, int r_port = DEFAULT_ROBOT_CONTROL_PORT, int f_port = DEFAULT_FILE_CONTROL_PORT)
+        public YHSES(string remote, Encoding encoding = default, int timeout = 800, int r_port = DEFAULT_ROBOT_CONTROL_PORT, int f_port = DEFAULT_FILE_CONTROL_PORT)
         {
             try
             {
-                IP = ip;
+                Remote = remote;
                 TimeOut = timeout;
                 MessageEncoding = encoding ?? Encoding.Default;
                 socket.ReceiveTimeout = TimeOut;
@@ -124,7 +124,7 @@ namespace YRCC
                         SendTimeout = TimeOut
                     };
                 }
-                endPoint = new IPEndPoint(IPAddress.Parse(IP), port);
+                endPoint = new IPEndPoint(IPUtil.ToIPAddress(Remote), port);
                 socket.Connect(endPoint);
             }
             catch (Exception)
