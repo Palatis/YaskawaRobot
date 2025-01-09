@@ -12,8 +12,8 @@ This project is derived from [df910105/YaskawaRobot](https://github.com/df910105
 | Executing Job Information                                  | R   | v       | v            | v           | v     |
 | Axis Config Information                                    | R   | v       | v            | v           | v     |
 | Robot Position Data                                        | R   | v       | v            | v           | v     |
-| Position Error                                             | R   | ?       | ?            | ?           | ?     |
-| Torque Data                                                | R   | ?       | ?            | ?           | ?     |
+| Position Error                                             | R   | v       | v            | v           | v     |
+| Torque Data                                                | R   | v       | v            | v           | v     |
 | I/O Data                                                   | RW  | v       | v            | v           | v     |
 | Register Data                                              | RW  | v       | v            | v           | v     |
 | Byte Variable (B)                                          | RW  | v       | v            | v           | v     |
@@ -22,8 +22,8 @@ This project is derived from [df910105/YaskawaRobot](https://github.com/df910105
 | Real Type Variable (R)                                     | RW  | v       | v            | v           | v     |
 | String Type Variable (S)                                   | RW  | v       | v            | v           | v     |
 | Robot Position Type Variable (P)                           | RW  | v       | v            | v           | v     |
-| Base Position Type Variable (BP)                           | RW  | ?       | ?            | ?           | ?     |
-| External Axis Type Variable (EX)                           | RW  | ?       | ?            | ?           | ?     |
+| Base Position Type Variable (BP)                           | RW  | v       | v            | v           | v     |
+| External Axis Type Variable (EX)                           | RW  | v       | v            | v           | v     |
 | Alarm Reset / Error Cancel                                 | W   | v       | v            | v           | v     |
 | Hold / Servo On/off                                        | W   | v       | v            | v           | v     |
 | Step / Cycle / Auto Switching                              | W   | v       | v            | v           | v     |

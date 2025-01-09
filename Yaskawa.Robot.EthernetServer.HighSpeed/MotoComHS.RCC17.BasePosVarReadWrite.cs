@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Linq;
+using Yaskawa.Robot.EthernetServer.HighSpeed.Packet;
 
 namespace Yaskawa.Robot.EthernetServer.HighSpeed
 {
     partial class MotoComHS
     {
-        /*
         public int ReadBasePosData(ushort number, ref BasePosistion config, out ushort err_code)
         {
             var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, NextRequestId(),
                 0x80, number, 0, 0x01,
                 new byte[0], 0);
-            var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);
+            var ans = Transmit(req, PORT_ROBOT_CONTROL);
             err_code = ans.added_status;
             if (ans.status == ERROR_SUCCESS)
             {
@@ -30,14 +30,14 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed
 
         public int WriteBasePosData(ushort number, BasePosistion config, out ushort err_code)
         {
-            var bytes = ParsePositionDataBytes(config);
+            var bytes = config.GetBytes();
             var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, NextRequestId(),
                 0x80, number, 0, 0x02,
                 bytes, (ushort)bytes.Length);
-            var ans = Transmit(req.ToBytes(), PORT_ROBOT_CONTROL);
+            var ans = Transmit(req, PORT_ROBOT_CONTROL);
             err_code = ans.added_status;
             return ans.status;
-        }*/
+        }
     }
 
     /// <summary>
@@ -63,6 +63,13 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed
         {
             return $"DataType: {DataType},\r\n" +
                 $"AxisData:\r\n{AxisData}\r\n";
+        }
+
+        public byte[] GetBytes()
+        {
+            return BitConverter.GetBytes(DataType)
+                .Concat(AxisData.GetBytes())
+                .ToArray();
         }
     }
 }
