@@ -53,9 +53,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\YRCC\YRCC.csproj">
+    <ProjectReference Include="..\Yaskawa.Robot.EthernetServer.HighSpeed\Yaskawa.Robot.EthernetServer.HighSpeed.csproj">
       <Project>{DB863367-4A0B-41A9-8A57-203C2CF057FB}</Project>
-      <Name>YRCC</Name>
+      <Name>Yaskawa.Robot.EthernetServer.HighSpeed</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

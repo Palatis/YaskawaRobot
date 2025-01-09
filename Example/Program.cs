@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using YRCC;
+using Yaskawa.Robot.EthernetServer;
 
 namespace Example
 {
@@ -14,7 +14,7 @@ namespace Example
             int rt;
             ushort err;
             SystemInfo systemInfo = new SystemInfo();
-            rt = ((YHSES)state).ReadSystemInfoData(11, ref systemInfo, out err);
+            rt = ((MotoComHS)state).ReadSystemInfoData(11, ref systemInfo, out err);
             Console.WriteLine(systemInfo);
             ErrMsg(rt, err);
             countT1++;
@@ -26,7 +26,7 @@ namespace Example
             int rt;
             ushort err;
             byte b0 = 0;
-            rt = ((YHSES)state).ReadByteData(1, ref b0, out err);
+            rt = ((MotoComHS)state).ReadByteData(1, ref b0, out err);
             Console.WriteLine(b0);
             ErrMsg(rt, err);
             countT2++;
@@ -35,7 +35,7 @@ namespace Example
 
         static void Main(string[] args)
         {
-            YHSES yrc1000 = new YHSES("192.168.255.1");
+            MotoComHS yrc1000 = new MotoComHS("192.168.255.1");
             Timer timer = new Timer(Callback, yrc1000, 1, 25);
             Timer timer2 = new Timer(Callback2, yrc1000, 1, 25);
 

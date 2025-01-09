@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyTitle>Yaskawa.Robot.EthernetServer.HighSpeed</AssemblyTitle>
+    <Description>Client for Yaskawa High Speed Ethernet Server.</Description>
+    <Product>Yaskawa.Robot.EthernetServer.HighSpeed</Product>
+    <LangVersion>latest</LangVersion>
+    <PackageId>$(MSBuildProjectName)</PackageId>
+    <RepositoryUrl>https://github.com/Palatis/YaskawaRobot</RepositoryUrl>
+    <PackageTags>yaskawa;motoman;motocom</PackageTags>
+    <PackageLicenseExpression>MIT-0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Buffers" Version="4.6.0" />
+  </ItemGroup>
+</Project>
