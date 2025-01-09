@@ -78,11 +78,14 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed
 
         public byte[] GetBytes()
         {
-            return BitConverter.GetBytes(DataType)
-                .Concat(BitConverter.GetBytes(Figure))
-                .Concat(BitConverter.GetBytes(ToolNumber))
-                .Concat(BitConverter.GetBytes(UserCoordNumber))
-                .Concat(BitConverter.GetBytes(ExtendedType))
+            var pos = new byte[20];
+            BitConverterEx.WriteBytes(DataType, pos, 0);
+            BitConverterEx.WriteBytes(Figure, pos, 4);
+            BitConverterEx.WriteBytes(ToolNumber, pos, 8);
+            BitConverterEx.WriteBytes(UserCoordNumber, pos, 12);
+            BitConverterEx.WriteBytes(ExtendedType, pos, 16);
+
+            return pos
                 .Concat(AxisData.GetBytes())
                 .ToArray();
         }
@@ -152,15 +155,16 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed
 
         public byte[] GetBytes()
         {
-            return BitConverter.GetBytes(Axis_1)
-                .Concat(BitConverter.GetBytes(Axis_2))
-                .Concat(BitConverter.GetBytes(Axis_3))
-                .Concat(BitConverter.GetBytes(Axis_4))
-                .Concat(BitConverter.GetBytes(Axis_5))
-                .Concat(BitConverter.GetBytes(Axis_6))
-                .Concat(BitConverter.GetBytes(Axis_7))
-                .Concat(BitConverter.GetBytes(Axis_8))
-                .ToArray();
+            var axis = new byte[32];
+            BitConverterEx.WriteBytes(Axis_1, axis, 0);
+            BitConverterEx.WriteBytes(Axis_2, axis, 4);
+            BitConverterEx.WriteBytes(Axis_3, axis, 8);
+            BitConverterEx.WriteBytes(Axis_4, axis, 12);
+            BitConverterEx.WriteBytes(Axis_5, axis, 16);
+            BitConverterEx.WriteBytes(Axis_6, axis, 20);
+            BitConverterEx.WriteBytes(Axis_7, axis, 24);
+            BitConverterEx.WriteBytes(Axis_8, axis, 28);
+            return axis;
         }
     }
 }

@@ -8,10 +8,13 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed
     {
         public int MovePulse(int robot, int station, SpeedType spdType, int speed, MoveMode mode, Axis pos, int tool, BaseStationData bsData, out ushort err_code)
         {
-            var data = BitConverter.GetBytes(robot)
-                .Concat(BitConverter.GetBytes(station))
-                .Concat(BitConverter.GetBytes((uint)spdType))
-                .Concat(BitConverter.GetBytes(speed))
+            var config = new byte[16];
+            BitConverterEx.WriteBytes(robot, config, 0);
+            BitConverterEx.WriteBytes(station, config, 4);
+            BitConverterEx.WriteBytes((uint)spdType, config, 8);
+            BitConverterEx.WriteBytes(speed, config, 12);
+
+            var data = config
                 .Concat(pos.GetBytes())
                 .Concat(BitConverter.GetBytes(tool))
                 .Concat(bsData.GetBytes())

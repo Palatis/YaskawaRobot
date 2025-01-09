@@ -8,11 +8,14 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed
     {
         public int MoveCartesian(int robot, int station, SpeedType spdType, int speed, MoveMode mode, CoordinateType coord, CartesianPositionData posData, BaseStationData bsData, out ushort err_code)
         {
-            var data = BitConverter.GetBytes(robot)
-                .Concat(BitConverter.GetBytes(station))
-                .Concat(BitConverter.GetBytes((uint)spdType))
-                .Concat(BitConverter.GetBytes(speed))
-                .Concat(BitConverter.GetBytes((uint)coord))
+            var config = new byte[20];
+            BitConverterEx.WriteBytes(robot, config, 0);
+            BitConverterEx.WriteBytes(station, config, 4);
+            BitConverterEx.WriteBytes((uint)spdType, config, 8);
+            BitConverterEx.WriteBytes(speed, config, 12);
+            BitConverterEx.WriteBytes((uint)coord, config, 16);
+
+            var data = config
                 .Concat(posData.GetBytes())
                 .Concat(bsData.GetBytes())
                 .ToArray();
@@ -55,19 +58,18 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed
 
         public byte[] GetBytes()
         {
-            return BitConverter.GetBytes(X)
-                .Concat(BitConverter.GetBytes(Y))
-                .Concat(BitConverter.GetBytes(Z))
-                .Concat(BitConverter.GetBytes(Tx))
-                .Concat(BitConverter.GetBytes(Ty))
-                .Concat(BitConverter.GetBytes(Tz))
-                .Concat(new byte[4] { 0x00, 0x00, 0x00, 0x00 }) // reservation
-                .Concat(new byte[4] { 0x00, 0x00, 0x00, 0x00 }) // reservation
-                .Concat(BitConverter.GetBytes(Type))
-                .Concat(BitConverter.GetBytes(ExpandedType))
-                .Concat(BitConverter.GetBytes(ToolNumber))
-                .Concat(BitConverter.GetBytes(UserCoordinate))
-                .ToArray();
+            var pos = new byte[48];
+            BitConverterEx.WriteBytes(X, pos, 0);
+            BitConverterEx.WriteBytes(Y, pos, 4);
+            BitConverterEx.WriteBytes(Z, pos, 8);
+            BitConverterEx.WriteBytes(Tx, pos, 12);
+            BitConverterEx.WriteBytes(Ty, pos, 16);
+            BitConverterEx.WriteBytes(Tz, pos, 20);
+            BitConverterEx.WriteBytes(Type, pos, 32);
+            BitConverterEx.WriteBytes(ExpandedType, pos, 36);
+            BitConverterEx.WriteBytes(ToolNumber, pos, 40);
+            BitConverterEx.WriteBytes(UserCoordinate, pos, 44);
+            return pos;
         }
     }
 
