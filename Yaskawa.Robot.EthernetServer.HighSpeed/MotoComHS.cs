@@ -173,7 +173,7 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed
 
                 try
                 {
-                    socket.Send(req.ToBytes());
+                    socket.Send(req.GetBytes());
                     if (direction == TRANSMISSION_SEND_AND_RECV)
                     {
                         var ans_packet = ArrayPool<byte>.Shared.Rent(512);

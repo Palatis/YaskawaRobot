@@ -26,7 +26,7 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed.Packet
         /// For debug purpose.
         /// </summary>
         /// <returns></returns>
-        public byte[] ToBytes()
+        public byte[] GetBytes()
         {
             var subheader = new byte[8]
             {
@@ -38,7 +38,7 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed.Packet
             BitConverterEx.WriteBytes(added_status_size, subheader, 2);
             BitConverterEx.WriteBytes(added_status, subheader, 4);
 
-            return Header.ToBytes()
+            return Header.GetBytes()
                 .Concat(subheader)
                 .Concat(data)
                 .ToArray();

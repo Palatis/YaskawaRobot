@@ -38,7 +38,7 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed.Packet
             block_no = BitConverter.ToUInt32(packet, 12);
         }
 
-        public byte[] ToBytes()
+        public byte[] GetBytes()
         {
             var header = new byte[24]
 {
