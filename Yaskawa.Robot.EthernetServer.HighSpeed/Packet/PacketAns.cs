@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Yaskawa.Robot.EthernetServer.HighSpeed.Packet
 {
-    class PacketAns
+    internal class PacketAns
     {
         public readonly PacketHeader Header;
         public readonly byte service;
@@ -28,10 +28,18 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed.Packet
         /// <returns></returns>
         public byte[] ToBytes()
         {
+            var subheader = new byte[8]
+            {
+                0x00, 0x00, 0x00, 0x00, // | service | status | added status size | padding |
+                0x00, 0x00, 0x00, 0x00, // | added status     | padding                     |
+            };
+            BitConverterEx.WriteBytes(service, subheader, 0);
+            BitConverterEx.WriteBytes(status, subheader, 1);
+            BitConverterEx.WriteBytes(added_status_size, subheader, 2);
+            BitConverterEx.WriteBytes(added_status, subheader, 4);
+
             return Header.ToBytes()
-                .Concat(new byte[] { service, status, added_status_size, PacketHeader.HEADER_PADDING_U8, })
-                .Concat(BitConverter.GetBytes(added_status))
-                .Concat(BitConverter.GetBytes(PacketHeader.HEADER_PADDING_U16))
+                .Concat(subheader)
                 .Concat(data)
                 .ToArray();
         }

@@ -32,25 +32,20 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed.Packet
 
         public byte[] ToBytes()
         {
+            var subheader = new byte[8]
+            {
+                0x00, 0x00, 0x00, 0x00, // | Command No.         | Instance            |
+                0x00, 0x00, 0x00, 0x00, // | attribute | service | padding1 | padding2 |
+            };
+            BitConverterEx.WriteBytes(cmd_no, subheader, 0);
+            BitConverterEx.WriteBytes(inst, subheader, 2);
+            BitConverterEx.WriteBytes(attr, subheader, 4);
+            BitConverterEx.WriteBytes(service, subheader, 5);
+
             return Header.ToBytes()
-                .Concat(BitConverter.GetBytes(cmd_no))
-                .Concat(BitConverter.GetBytes(inst))
-                .Concat(new byte[] { attr, service })
-                .Concat(BitConverter.GetBytes(PacketHeader.HEADER_PADDING_U16))
+                .Concat(subheader)
                 .Concat(data)
                 .ToArray();
-        }
-
-        public PacketReq Clone(byte[] data = null)
-        {
-            if (data == null)
-            {
-                return new PacketReq(Header.division, Header.req_id, cmd_no, inst, attr, service, this.data, (ushort)this.data.Length);
-            }
-            else
-            {
-                return new PacketReq(Header.division, Header.req_id, cmd_no, inst, attr, service, data, (ushort)data.Length);
-            }
         }
     }
 }

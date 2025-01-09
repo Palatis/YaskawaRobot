@@ -151,13 +151,20 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed
 
         private byte[] GenerateErrorAnsPacket(byte result, ushort errno)
         {
-            //when error, result and error number are what callers care about
-            return new byte[25]
-                .Concat(new byte[1] { result })
-                .Concat(new byte[2])
-                .Concat(BitConverter.GetBytes(errno))
-                .Concat(new byte[2])
-                .ToArray();
+            var bytes = new byte[32]
+            {
+                0x59, 0x45, 0x52, 0x43, // | Identifier ("YERC")                                    |
+                0x20, 0x00, 0x00, 0x00, // | Header size           | Data size                      |
+                0x33, 0x00, 0x00, 0x00, // | Reserved 1 | division | ACK               | Request ID |
+                0x00, 0x00, 0x00, 0x00, // | Block No.                                              |
+                0x39, 0x39, 0x39, 0x39, // | Reserved 2                                             |
+                0x39, 0x39, 0x39, 0x39, // | Reserved 2                                             |
+                0x00, 0x00, 0x02, 0x00, // | service    | status   | added status size | padding    |
+                0x00, 0x00, 0x00, 0x00, // | added status          | padding                        |
+            };
+            BitConverterEx.WriteBytes(result, bytes, 25);
+            BitConverterEx.WriteBytes(errno, bytes, 29);
+            return bytes;
         }
 
         private PacketAns Transmit(PacketReq req, int port, int direction = TRANSMISSION_SEND_AND_RECV)

@@ -7,20 +7,15 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed.Packet
 {
     internal class PacketHeader
     {
-        public const string HEADER_IDENTIFIER = "YERC";
         public const ushort HEADER_SIZE = 0x20;
-        public const byte HEADER_RESERVED_1 = 3;
+
         public const byte HEADER_DIVISION_ROBOT_CONTROL = 1;
         public const byte HEADER_DIVISION_FILE_CONTROL = 2;
+
         public const byte HEADER_ACK_REQUEST = 0;
         public const byte HEADER_ACK_NOT_REQUEST = 1;
-        public const uint HEADER_BLOCK_NUMBER_REQ = 0;
-        public const string HEADER_RESERVED_2 = "99999999";
-        public const ushort HEADER_PADDING_U16 = 0;
-        public const byte HEADER_PADDING_U8 = 0;
 
-        internal static readonly IReadOnlyList<byte> HEADER_IDENTIFIER_BYTES = Encoding.ASCII.GetBytes(HEADER_IDENTIFIER);
-        internal static readonly IReadOnlyList<byte> HEADER_RESERVED_2_BYTES = Encoding.ASCII.GetBytes(HEADER_RESERVED_2);
+        public const uint HEADER_BLOCK_NUMBER_REQ = 0;
 
         public readonly ushort data_size;
         public readonly byte division;
@@ -48,13 +43,22 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed.Packet
 
         public byte[] ToBytes()
         {
-            return HEADER_IDENTIFIER_BYTES
-                .Concat(BitConverter.GetBytes(HEADER_SIZE))
-                .Concat(BitConverter.GetBytes(data_size))
-                .Concat(new byte[] { HEADER_RESERVED_1, division, ack, req_id })
-                .Concat(BitConverter.GetBytes(block_no))
-                .Concat(HEADER_RESERVED_2_BYTES)
-                .ToArray();
+            var header = new byte[24]
+{
+                0x59, 0x45, 0x52, 0x43, // | Identifier ("YERC")                      |
+                0x00, 0x00, 0x00, 0x00, // | Header size           | Data size        |
+                0x33, 0x00, 0x00, 0x00, // | Reserved 1 | division | ACK | Request ID |
+                0x00, 0x00, 0x00, 0x00, // | Block No.                                |
+                0x39, 0x39, 0x39, 0x39, // | Reserved 2                               |
+                0x39, 0x39, 0x39, 0x39, // | Reserved 2                               |
+            };
+            BitConverterEx.WriteBytes(HEADER_SIZE, header, 4);
+            BitConverterEx.WriteBytes(data_size, header, 6);
+            BitConverterEx.WriteBytes(division, header, 9);
+            BitConverterEx.WriteBytes(ack, header, 10);
+            BitConverterEx.WriteBytes(req_id, header, 11);
+            BitConverterEx.WriteBytes(block_no, header, 12);
+            return header;
         }
     }
 }
