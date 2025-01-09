@@ -24,14 +24,14 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed
             err_code = ans.added_status;
             if (ans.status == ERROR_SUCCESS)
             {
-                config.Axis_1 = Encoding.UTF8.GetString(ans.data.Skip(0).Take(4).ToArray());
-                config.Axis_2 = Encoding.UTF8.GetString(ans.data.Skip(4).Take(4).ToArray());
-                config.Axis_3 = Encoding.UTF8.GetString(ans.data.Skip(8).Take(4).ToArray());
-                config.Axis_4 = Encoding.UTF8.GetString(ans.data.Skip(12).Take(4).ToArray());
-                config.Axis_5 = Encoding.UTF8.GetString(ans.data.Skip(16).Take(4).ToArray());
-                config.Axis_6 = Encoding.UTF8.GetString(ans.data.Skip(20).Take(4).ToArray());
-                config.Axis_7 = Encoding.UTF8.GetString(ans.data.Skip(24).Take(4).ToArray());
-                config.Axis_7 = Encoding.UTF8.GetString(ans.data.Skip(28).Take(4).ToArray());
+                config.Axis_1 = Encoding.UTF8.GetString(ans.data, 0, 4).Trim();
+                config.Axis_2 = Encoding.UTF8.GetString(ans.data, 4, 4).Trim();
+                config.Axis_3 = Encoding.UTF8.GetString(ans.data, 8, 4).Trim();
+                config.Axis_4 = Encoding.UTF8.GetString(ans.data, 12, 4).Trim();
+                config.Axis_5 = Encoding.UTF8.GetString(ans.data, 16, 4).Trim();
+                config.Axis_6 = Encoding.UTF8.GetString(ans.data, 20, 4).Trim();
+                config.Axis_7 = Encoding.UTF8.GetString(ans.data, 24, 4).Trim();
+                config.Axis_8 = Encoding.UTF8.GetString(ans.data, 28, 4).Trim();
             }
             return ans.status;
         }

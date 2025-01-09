@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Text;
 using Yaskawa.Robot.EthernetServer.HighSpeed.Packet;
 
@@ -35,13 +34,13 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed
             alarm.Code = BitConverter.ToUInt32(packetData, 0);
             alarm.Data = BitConverter.ToUInt32(packetData, 4);
             alarm.Type = (AlarmType)BitConverter.ToUInt32(packetData, 8);
-            string timeString = Encoding.ASCII.GetString(packetData.Skip(12).Take(16).ToArray());
+            var timeString = Encoding.ASCII.GetString(packetData, 12, 16).TrimEnd('\0');
             if (DateTime.TryParseExact(timeString, DATE_PATTERN, null,
                 System.Globalization.DateTimeStyles.None, out DateTime dateTime))
             {
                 alarm.Time = dateTime;
             }
-            alarm.Name = MessageEncoding.GetString(packetData.Skip(28).Take(32).ToArray()).TrimEnd('\0');
+            alarm.Name = MessageEncoding.GetString(packetData, 24, 32).TrimEnd('\0');
         }
     }
 
