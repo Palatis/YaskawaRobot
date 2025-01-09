@@ -98,11 +98,6 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed
 
         public Encoding MessageEncoding { get; }
 
-        /// <summary>
-        /// 連線是否正常? (測試中)
-        /// </summary>
-        public bool IsConnectOK { get; private set; } = false;
-
         private byte requestId = 0;
         public byte RequestId => requestId;
 
@@ -169,51 +164,44 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed
 
         private PacketAns Transmit(PacketReq req, int port, int direction = TRANSMISSION_SEND_AND_RECV)
         {
-            byte[] req_packet = req.ToBytes();
-            byte[] ans_packet = ArrayPool<byte>.Shared.Rent(512);
-            try
+            PacketAns ans = null;
+            lock (this)
             {
-                PacketAns ans = null;
-                lock (this)
-                {
-                    bool to_disc = !socket.Connected;
-                    if (!socket.Connected)
-                    {
-                        Connect(port);
-                    }
+                bool to_disc = !socket.Connected;
+                if (!socket.Connected)
+                    Connect(port);
 
-                    try
+                try
+                {
+                    socket.Send(req.ToBytes());
+                    if (direction == TRANSMISSION_SEND_AND_RECV)
                     {
-                        socket.Send(req_packet);
-                        if (direction == TRANSMISSION_SEND_AND_RECV)
+                        var ans_packet = ArrayPool<byte>.Shared.Rent(512);
+                        try
                         {
                             int count = socket.Receive(ans_packet);
                             ans = new PacketAns(ans_packet);
-                            IsConnectOK = true;
+                        }
+                        finally
+                        {
+                            ArrayPool<byte>.Shared.Return(ans_packet);
                         }
                     }
-                    catch (SocketException ex)
-                    {
-                        IsConnectOK = false;
-                        ans = new PacketAns(GenerateErrorAnsPacket(ERROR_CONNECTION, (ushort)ex.ErrorCode));
-                    }
 
-                    if (ans.status != ERROR_CONNECTION)
-                    {
-                        if (req.Header.req_id != ans.Header.req_id)
-                            ans = new PacketAns(GenerateErrorAnsPacket(ERROR_REQUEST_ID, 0));
-                    }
+                    if (req.Header.req_id != ans.Header.req_id)
+                        ans = new PacketAns(GenerateErrorAnsPacket(ERROR_REQUEST_ID, 0));
 
-                    if (to_disc)
-                    {
-                        Disconnect();
-                    }
+                    return ans;
                 }
-                return ans;
-            }
-            finally
-            {
-                ArrayPool<byte>.Shared.Return(ans_packet);
+                catch (SocketException ex)
+                {
+                    return new PacketAns(GenerateErrorAnsPacket(ERROR_CONNECTION, (ushort)ex.ErrorCode));
+                }
+                finally
+                {
+                    if (to_disc)
+                        Disconnect();
+                }
             }
         }
 
