@@ -16,7 +16,7 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed
         /// <param name="line"></param>
         /// <param name="err_code"></param>
         /// <returns></returns>
-        public int SelectJob(string job_name, uint line, out ushort err_code)
+        public int SelectJob(string job_name, byte slot, uint line, out ushort err_code)
         {
             var bytes = Encoding.UTF8.GetBytes(job_name);
             if (bytes.Length <= 32)
@@ -25,7 +25,7 @@ namespace Yaskawa.Robot.EthernetServer.HighSpeed
             }
             bytes = bytes.Concat(BitConverter.GetBytes(line)).ToArray();
             var req = new PacketReq(PacketHeader.HEADER_DIVISION_ROBOT_CONTROL, NextRequestId(),
-                0x87, 1, 0x00, 0x02,
+                0x87, slot, (byte)(slot == 1 ? 2 : 1), 0x02,
                 bytes, (ushort)bytes.Length);
             var ans = Transmit(req, PORT_ROBOT_CONTROL);
             err_code = ans.added_status;
